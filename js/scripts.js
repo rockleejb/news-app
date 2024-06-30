@@ -17,7 +17,8 @@ function displayNews(articles) {
     const newsDiv = document.querySelector("#news");
     const maxRowLength = 3;
     let i = 0;
-    while (i < articles.length) {
+    const lastRowLength = articles.length % 3;
+    while (i < articles.length - lastRowLength) {
         if (i % maxRowLength === 0) {
             // create breaks then new row
             const br = document.createElement("br");
@@ -29,28 +30,16 @@ function displayNews(articles) {
             col.classList.add("col");
             const articleCard = checkNullNode(createArticle(articles[i]));
             if (!articleCard) continue;
-            const link = createLinkedArticleIfUrlAvailable(articles[i]);
-            if (link !== null) {
-                link.appendChild(articleCard);
-                col.appendChild(link);
-            } else {
-                col.appendChild(articleCard);
-            }
+            col.appendChild(articleCard);
             row.appendChild(col);
             newsDiv.appendChild(row);
         } else {
             const row = newsDiv.lastElementChild;
             const col = document.createElement("div");
-            col.classList.add("col");
+            col.classList.add("col-sm-4");
             const articleCard = checkNullNode(createArticle(articles[i]));
             if (!articleCard) continue;
-            const link = createLinkedArticleIfUrlAvailable(articles[i]);
-            if (link !== null) {
-                link.appendChild(articleCard);
-                col.appendChild(link);
-            } else {
-                col.appendChild(articleCard);
-            }
+            col.appendChild(articleCard);
             row.appendChild(col);
         }
         i++;
@@ -82,10 +71,17 @@ function createArticle(article) {
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
     const title = document.createElement("h5");
+
     title.classList.add("card-title");
     const maxTitleLength = 40;
     title.innerText = truncatePastMaxLength(article.title, maxTitleLength);
-    cardBody.appendChild(title);
+    const link = createLinkedArticleIfUrlAvailable(article);
+    if (link !== null) {
+        link.appendChild(title);
+        cardBody.appendChild(link);
+    } else {
+        cardBody.appendChild(title);
+    }
     const description = document.createElement("p");
     description.classList.add("card-text");
     const maxDescriptionLength = 80;
