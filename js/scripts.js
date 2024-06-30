@@ -5,6 +5,7 @@ async function fetchNews() {
     try {
         const response = await fetch(url);
         const data = await response.json();
+        console.log(data);
         displayNews(data.articles);
     } catch (error) {
         console.error(error);
@@ -17,6 +18,7 @@ function displayNews(articles) {
     const newsDiv = document.querySelector("#news");
     const maxRowLength = 3;
     let i = 0;
+    // next lines ensure each row has 3 articles
     const lastRowLength = articles.length % 3;
     while (i < articles.length - lastRowLength) {
         if (i % maxRowLength === 0) {
